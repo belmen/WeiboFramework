@@ -10,7 +10,6 @@ import java.net.URL;
 import java.util.List;
 
 import org.apache.http.Header;
-import org.apache.http.NameValuePair;
 
 import belmen.weiboframework.util.Logger;
 
