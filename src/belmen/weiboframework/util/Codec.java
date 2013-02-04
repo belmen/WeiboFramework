@@ -14,10 +14,10 @@ public class Codec {
 	
 	public static final String TAG = Codec.class.getSimpleName();
 	
-	public static String urlEncode(String text) {
+	public static String urlEncode(String s) {
 		String encoded = null;
 		try {
-			encoded = URLEncoder.encode(text, HTTP.UTF_8);
+			encoded = URLEncoder.encode(s, HTTP.UTF_8);
 			encoded = encoded.replace("*", "%2A")
 					.replace("+", "%20")
 					.replace("%7E", "~");
@@ -27,9 +27,9 @@ public class Codec {
 		return encoded;
 	}
 	
-	public static String urlDecode(String encodedText) {
+	public static String urlDecode(String s) {
 		try {
-			return URLDecoder.decode(encodedText, HTTP.UTF_8);
+			return URLDecoder.decode(s, HTTP.UTF_8);
 		} catch (UnsupportedEncodingException e) {
 			Logger.e(TAG, e.getMessage(), e);
 		}

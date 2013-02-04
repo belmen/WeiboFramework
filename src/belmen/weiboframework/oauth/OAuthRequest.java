@@ -18,7 +18,7 @@ public class OAuthRequest {
 	private List<Header> mHeaders = new ArrayList<Header>();
 	private List<NameValuePair> mQueryParams = new ArrayList<NameValuePair>();
 	private List<NameValuePair> mPostParams = new ArrayList<NameValuePair>();
-	private List<NameValuePair> mOAuthParams = new ArrayList<NameValuePair>();
+//	private List<NameValuePair> mOAuthParams = new ArrayList<NameValuePair>();
 	private String mFileName = null;
 	private File mFile = null;
 	
@@ -61,9 +61,9 @@ public class OAuthRequest {
 		return mPostParams;
 	}
 	
-	public List<NameValuePair> getOAuthParams() {
-		return mOAuthParams;
-	}
+//	public List<NameValuePair> getOAuthParams() {
+//		return mOAuthParams;
+//	}
 	
 	public List<Header> getHeaders() {
 		return mHeaders;
@@ -89,9 +89,9 @@ public class OAuthRequest {
 //		mPostParams.add(new BasicNameValuePair(name, String.valueOf(value)));
 //	}
 
-	public void addOAuthParameter(String name, String value) {
-		mOAuthParams.add(new BasicNameValuePair(name, value));
-	}
+//	public void addOAuthParameter(String name, String value) {
+//		mOAuthParams.add(new BasicNameValuePair(name, value));
+//	}
 	
 //	public void addParameter(String name, String value) {
 //		switch(mMethod) {
