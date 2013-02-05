@@ -71,6 +71,13 @@ public class OAuthClient {
 		list.add(new BasicNameValuePair("oauth_nonce", getNonce()));
 		list.add(new BasicNameValuePair("oauth_version", "1.0"));
 		list.add(new BasicNameValuePair("oauth_signature", getSignature(request, list)));
+		String username = request.getUsername();
+		String password = request.getPassword();
+		if(username != null && password != null) {
+			list.add(new BasicNameValuePair("x_auth_username", username));
+			list.add(new BasicNameValuePair("x_auth_password", password));
+			list.add(new BasicNameValuePair("x_auth_mode", "client_auth"));
+		}
 		return list;
 	}
 	

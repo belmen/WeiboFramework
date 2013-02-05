@@ -124,6 +124,14 @@ public class OAuthRequest {
 		this.mPassword = password;
 	}
 	
+	public String getUsername() {
+		return mUsername;
+	}
+	
+	public String getPassword() {
+		return mPassword;
+	}
+	
 //	public String toEncodedQueryString(List<NameValuePair> params) {
 //		StringBuilder builder = new StringBuilder();
 //		for(NameValuePair param : params) {
