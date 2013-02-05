@@ -21,6 +21,8 @@ public class OAuthRequest {
 //	private List<NameValuePair> mOAuthParams = new ArrayList<NameValuePair>();
 	private String mFileName = null;
 	private File mFile = null;
+	private String mUsername = null;
+	private String mPassword = null;
 	
 	public OAuthRequest(HttpMethod method, String url) {
 		mMethod = method;
@@ -115,6 +117,11 @@ public class OAuthRequest {
 	
 	public boolean hasFile() {
 		return mFileName != null && mFile != null;
+	}
+	
+	public void setCredentials(String username, String password) {
+		this.mUsername = username;
+		this.mPassword = password;
 	}
 	
 //	public String toEncodedQueryString(List<NameValuePair> params) {
