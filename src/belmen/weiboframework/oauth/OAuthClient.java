@@ -27,6 +27,7 @@ public class OAuthClient {
 	
 	private final String mConsumerKey;
 	private final String mConsumerSecret;
+	@SuppressWarnings("unused")
 	private String mCallbackUrl;
 	private String mToken = null;
 	private String mTokenSecret = null;
@@ -55,13 +56,32 @@ public class OAuthClient {
 		this.mTokenSecret = tokenSecret;
 	}
 
+	/**
+	 * 为请求签名
+	 * @param request
+	 * @return
+	 */
 	protected OAuthRequest sign(OAuthRequest request) {
-		List<NameValuePair> oauthParams = getOAuthParams(request);
+		appendOAuthParams(getOAuthParams(request), request);
 		return request;
 	}
 	
+	/**
+	 * 添加额外的OAuth参数
+	 * @return
+	 */
+	protected List<NameValuePair> getAdditionalOAuthParameters() {
+		return null;
+	}
+	
+	/**
+	 * 获取请求的OAuth参数
+	 * @param request
+	 * @return
+	 */
 	private List<NameValuePair> getOAuthParams(OAuthRequest request) {
 		List<NameValuePair> list = new ArrayList<NameValuePair>();
+		// 添加OAuth 1.0标准参数
 		if(mToken != null) {
 			list.add(new BasicNameValuePair("oauth_token", mToken));
 		}
@@ -70,7 +90,8 @@ public class OAuthClient {
 		list.add(new BasicNameValuePair("oauth_timestamp", getTimeStamp()));
 		list.add(new BasicNameValuePair("oauth_nonce", getNonce()));
 		list.add(new BasicNameValuePair("oauth_version", "1.0"));
-		list.add(new BasicNameValuePair("oauth_signature", getSignature(request, list)));
+		
+		// 添加XAuth参数
 		String username = request.getUsername();
 		String password = request.getPassword();
 		if(username != null && password != null) {
@@ -78,14 +99,22 @@ public class OAuthClient {
 			list.add(new BasicNameValuePair("x_auth_password", password));
 			list.add(new BasicNameValuePair("x_auth_mode", "client_auth"));
 		}
+		
+		// 添加客户端额外的参数
+		List<NameValuePair> additional = getAdditionalOAuthParameters();
+		if(additional != null) {
+			list.addAll(additional);
+		}
+		// 生成OAuth1.0签名
+		list.add(new BasicNameValuePair("oauth_signature", getSignature(request, list)));
 		return list;
 	}
 	
-	private static String getTimeStamp() {
+	private static final String getTimeStamp() {
 		return String.valueOf(System.currentTimeMillis() / 1000);
 	}
 	
-	private static String getNonce() {
+	private static final String getNonce() {
 		return String.valueOf(System.currentTimeMillis() / 1000 + new Random().nextInt());
 	}
 	
@@ -111,12 +140,9 @@ public class OAuthClient {
 	
 	private static String getEncodedString(List<NameValuePair> params) {
 		StringBuilder builder = new StringBuilder();
-		String string;
 		for(NameValuePair param : params) {
-			builder.append('&');
-			string = String.format("%s=%s", Codec.urlEncode(param.getName()),
-					Codec.urlEncode(param.getValue()));
-			builder.append(string);
+			builder.append("&").append(Codec.urlEncode(param.getName()))
+			.append("=").append(Codec.urlEncode(param.getValue()));
 		}
 		return builder.toString().substring(1);
 	}
@@ -134,6 +160,34 @@ public class OAuthClient {
 			Logger.e(TAG, e.getMessage(), e);
 		}
 		return null;
+	}
+	
+	private void appendOAuthParams(List<NameValuePair> oauthParams, OAuthRequest request) {
+		if(request == null || oauthParams == null) {
+			return;
+		}
+		switch (mSignStrategy) {
+		case SIGN_IN_HEADER:
+			request.addHeader("Authorization", getOAuthHeader(oauthParams));
+			break;
+		case SIGN_IN_QUERY_STRING:
+			for(NameValuePair param : oauthParams) {
+				request.addQueryParameter(param.getName(), param.getValue());
+			}
+			break;
+		}
+	}
+	
+	private static String getOAuthHeader(List<NameValuePair> oauthParams) {
+		if(oauthParams == null) {
+			return null;
+		}
+		StringBuilder sb = new StringBuilder("OAuth ");
+		for(NameValuePair param : oauthParams) {
+			sb.append(String.format("%s=\"%s\",", param.getName(), Codec.urlEncode(param.getValue())));
+		}
+		String str = sb.toString();
+		return str.substring(0, str.length() - 1);
 	}
 	
 	private static Comparator<NameValuePair> mParamComparator = new Comparator<NameValuePair>() {
