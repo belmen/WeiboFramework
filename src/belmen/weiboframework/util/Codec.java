@@ -6,6 +6,9 @@ import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+
 import org.apache.http.protocol.HTTP;
 
 import android.util.Base64;
@@ -13,6 +16,9 @@ import android.util.Base64;
 public class Codec {
 	
 	public static final String TAG = Codec.class.getSimpleName();
+	private static final String UTF_8 = "UTF-8";
+	private static final String HMAC_SHA1 = "HmacSHA1";
+	private static Mac mMac = null;
 	
 	public static String urlEncode(String s) {
 		String encoded = null;
@@ -59,6 +65,27 @@ public class Codec {
 	}
 	
 	public static String base64(String content) {
-		return Base64.encodeToString(content.getBytes(), Base64.NO_WRAP);
+		return base64(content.getBytes());
+	}
+	
+	public static String base64(byte[] input) {
+		return Base64.encodeToString(input, Base64.NO_WRAP);
+	}
+	
+	public static byte[] HmacSHA1(String input, String key) {
+		if(input == null || key == null) {
+			return null;
+		}
+		try {
+			if(mMac == null) {
+				mMac = Mac.getInstance(HMAC_SHA1);
+			}
+			SecretKeySpec sks = new SecretKeySpec(key.getBytes(UTF_8), HMAC_SHA1);
+			mMac.init(sks);
+			return mMac.doFinal(input.getBytes(UTF_8));
+		} catch (Exception e) {
+			Logger.e(TAG, e.getMessage(), e);
+		}
+		return null;
 	}
 }

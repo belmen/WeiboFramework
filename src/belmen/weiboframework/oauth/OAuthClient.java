@@ -6,24 +6,17 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
-
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
-import android.util.Base64;
 import belmen.weiboframework.util.Codec;
-import belmen.weiboframework.util.Logger;
 
-public class OAuthClient {
+public abstract class OAuthClient {
 
 	public static final String TAG = OAuthClient.class.getSimpleName();
 	public static final int SIGN_IN_HEADER = 0;
 	public static final int SIGN_IN_QUERY_STRING = 1;
 	private static final String DEFAULT_CALLBACK_URL = "oob";
-	private static final String SIGNATURE_ALGORITHM = "HmacSHA1";
-	private static final String SIGNATURE_CODE = "UTF-8";
 	
 	private final String mConsumerKey;
 	private final String mConsumerSecret;
@@ -43,6 +36,10 @@ public class OAuthClient {
 		this.mConsumerSecret = consumerSecret;
 		this.mCallbackUrl = callbackUrl;
 	}
+	
+	public final void setCallbackUrl(String url) {
+		this.mCallbackUrl = url;
+	}
 
 	public final void setSignStrategy(int signStrategy) {
 		if(signStrategy == SIGN_IN_HEADER
@@ -55,6 +52,12 @@ public class OAuthClient {
 		this.mToken = token;
 		this.mTokenSecret = tokenSecret;
 	}
+	
+	public abstract String retrieveRequestToken();
+	
+	public abstract String retrieveAccessToken(String verifier);
+	
+	public abstract String retrieveAccessToken(String username, String password);
 
 	/**
 	 * 为请求签名
@@ -80,6 +83,9 @@ public class OAuthClient {
 	 * @return
 	 */
 	private List<NameValuePair> getOAuthParams(OAuthRequest request) {
+		if(request == null) {
+			return null;
+		}
 		List<NameValuePair> list = new ArrayList<NameValuePair>();
 		// 添加OAuth 1.0标准参数
 		if(mToken != null) {
@@ -90,6 +96,10 @@ public class OAuthClient {
 		list.add(new BasicNameValuePair("oauth_timestamp", getTimeStamp()));
 		list.add(new BasicNameValuePair("oauth_nonce", getNonce()));
 		list.add(new BasicNameValuePair("oauth_version", "1.0"));
+		String verifier = request.getVerifier();
+		if(verifier != null) {
+			list.add(new BasicNameValuePair("oauth_verifier", verifier));
+		}
 		
 		// 添加XAuth参数
 		String username = request.getUsername();
@@ -148,18 +158,10 @@ public class OAuthClient {
 	}
 	
 	private String generateSignature(String baseString) {
-		try {
-			String keyString = String.format("%s&%s", Codec.urlEncode(mConsumerSecret),
-					mTokenSecret != null ? Codec.urlEncode(mTokenSecret) : "");
-			SecretKeySpec key = new SecretKeySpec(keyString.getBytes(SIGNATURE_CODE), SIGNATURE_ALGORITHM);
-			Mac mac = Mac.getInstance(SIGNATURE_ALGORITHM);
-			mac.init(key);
-			byte[] bytes = mac.doFinal(baseString.getBytes(SIGNATURE_CODE));
-			return Base64.encodeToString(bytes, Base64.NO_WRAP);
-		} catch (Exception e) {
-			Logger.e(TAG, e.getMessage(), e);
-		}
-		return null;
+		String keyString = String.format("%s&%s", Codec.urlEncode(mConsumerSecret),
+				mTokenSecret != null ? Codec.urlEncode(mTokenSecret) : "");
+		byte[] bytes = Codec.HmacSHA1(baseString, keyString);
+		return Codec.base64(bytes);
 	}
 	
 	private void appendOAuthParams(List<NameValuePair> oauthParams, OAuthRequest request) {

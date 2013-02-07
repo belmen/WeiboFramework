@@ -13,32 +13,33 @@ import belmen.weiboframework.http.HttpMethod;
 
 public class OAuthRequest {
 
-	private HttpMethod mMethod;
-	private String mUrl;
-	private List<Header> mHeaders = new ArrayList<Header>();
-	private List<NameValuePair> mQueryParams = new ArrayList<NameValuePair>();
-	private List<NameValuePair> mPostParams = new ArrayList<NameValuePair>();
-//	private List<NameValuePair> mOAuthParams = new ArrayList<NameValuePair>();
-	private String mFileName = null;
-	private File mFile = null;
-	private String mUsername = null;
-	private String mPassword = null;
+	private final HttpMethod method;
+	private String url;
+	private List<Header> headers = new ArrayList<Header>();
+	private List<NameValuePair> queryParams = new ArrayList<NameValuePair>();
+	private List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+	private String fileName = null;
+	private File file = null;
+	private String username = null;
+	private String password = null;
+	private String callback = null;
+	private String verifier = null;
 	
 	public OAuthRequest(HttpMethod method, String url) {
-		mMethod = method;
-		mUrl = url;
+		this.method = method;
+		this.url = url;
 	}
 	
 	public HttpMethod getMethod() {
-		return mMethod;
+		return method;
 	}
 	
 	public String getMethodName() {
-		return mMethod.name();
+		return method.name();
 	}
 
 	public String getUrl() {
-		return mUrl;
+		return url;
 	}
 	
 //	public String getCompleteUrl() {
@@ -52,31 +53,27 @@ public class OAuthRequest {
 //	}
 	
 	public void appendUrl(String append) {
-		mUrl += append;
+		this.url += append;
 	}
 
 	public List<NameValuePair> getQueryStringParams() {
-		return mQueryParams;
+		return queryParams;
 	}
 
 	public List<NameValuePair> getPostParams() {
-		return mPostParams;
+		return postParams;
 	}
 	
-//	public List<NameValuePair> getOAuthParams() {
-//		return mOAuthParams;
-//	}
-	
 	public List<Header> getHeaders() {
-		return mHeaders;
+		return headers;
 	}
 	
 	public void addHeader(String name, String value) {
-		mHeaders.add(new BasicHeader(name, value));
+		headers.add(new BasicHeader(name, value));
 	}
 	
 	public void addQueryParameter(String name, String value) {
-		mQueryParams.add(new BasicNameValuePair(name, value));
+		queryParams.add(new BasicNameValuePair(name, value));
 	}
 	
 //	public void addQueryParameter(String name, int value) {
@@ -84,7 +81,7 @@ public class OAuthRequest {
 //	}
 	
 	public void addPostParameter(String name, String value) {
-		mPostParams.add(new BasicNameValuePair(name, value));
+		postParams.add(new BasicNameValuePair(name, value));
 	}
 	
 //	public void addPostParameter(String name, int value) {
@@ -103,33 +100,49 @@ public class OAuthRequest {
 //	}
 
 	public String getFileName() {
-		return mFileName;
+		return fileName;
 	}
 	
 	public File getFile() {
-		return mFile;
+		return file;
 	}
 	
 	public void setFile(String fileName, File file) {
-		this.mFileName = fileName;
-		this.mFile = file;
+		this.fileName = fileName;
+		this.file = file;
 	}
 	
 	public boolean hasFile() {
-		return mFileName != null && mFile != null;
+		return fileName != null && file != null;
 	}
 	
 	public void setCredentials(String username, String password) {
-		this.mUsername = username;
-		this.mPassword = password;
+		this.username = username;
+		this.password = password;
 	}
 	
 	public String getUsername() {
-		return mUsername;
+		return username;
 	}
 	
 	public String getPassword() {
-		return mPassword;
+		return password;
+	}
+
+	public String getCallback() {
+		return callback;
+	}
+
+	public void setCallback(String callback) {
+		this.callback = callback;
+	}
+
+	public String getVerifier() {
+		return verifier;
+	}
+
+	public void setVerifier(String verifier) {
+		this.verifier = verifier;
 	}
 	
 //	public String toEncodedQueryString(List<NameValuePair> params) {
