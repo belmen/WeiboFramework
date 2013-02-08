@@ -109,7 +109,7 @@ public class Logger {
 		if(!SHOW_FLAG) {
 			return;
 		}
-		Log.d(tag, msg, e);
+		Log.i(tag, msg, e);
 	}
 	
 	public static void v(String tag, String msg, Throwable e) {
