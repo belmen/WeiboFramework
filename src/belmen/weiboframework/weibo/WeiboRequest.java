@@ -1,12 +1,17 @@
-package belmen.weiboframework.http;
+package belmen.weiboframework.weibo;
 
 import java.io.File;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
-public class HttpRequest {
+import belmen.weiboframework.http.HttpMethod;
+import belmen.weiboframework.util.Codec;
 
-	public static final String TAG = HttpRequest.class.getSimpleName();
+public class WeiboRequest {
+
+	public static final String TAG = WeiboRequest.class.getSimpleName();
 	
 	private HttpMethod method;
 	private String url;
@@ -15,7 +20,7 @@ public class HttpRequest {
 	private Map<String, String> postParams = new LinkedHashMap<String, String>();
 	private Map<String, File> files = new LinkedHashMap<String, File>();
 	
-	public HttpRequest(HttpMethod method, String url) {
+	public WeiboRequest(HttpMethod method, String url) {
 		this.method = method;
 		this.url = url;
 	}
@@ -66,5 +71,28 @@ public class HttpRequest {
 	
 	public boolean hasFile() {
 		return files.size() != 0;
+	}
+	
+	public String getCompleteUrl() {
+		StringBuilder sb = new StringBuilder(url);
+		sb.append(url.contains("?") ? "&" : "?");
+		Iterator<Entry<String, String>> iter = queryParams.entrySet().iterator();
+		Entry<String, String> entry;
+		String name, value;
+		while(iter.hasNext()) {
+			entry = iter.next();
+			name = entry.getKey();
+			value = entry.getValue();
+			sb.append(Codec.urlEncode(name)).append("=").append(Codec.urlEncode(value));
+		}
+		return sb.toString();
+	}
+	
+	public static WeiboRequest newGetRequest(String url) {
+		return new WeiboRequest(HttpMethod.GET, url);
+	}
+	
+	public static WeiboRequest newPostRequest(String url){
+		return new WeiboRequest(HttpMethod.POST, url);
 	}
 }

@@ -1,12 +1,12 @@
-package belmen.weiboframework.weibo;
+package belmen.weiboframework.oauth;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import belmen.weiboframework.http.HttpMethod;
-import belmen.weiboframework.http.HttpRequest;
+import belmen.weiboframework.weibo.WeiboRequest;
 
-public class OAuthRequest extends HttpRequest {
+public class OAuthRequest extends WeiboRequest {
 
 //	private final HttpMethod method;
 //	private String url;
@@ -127,6 +127,14 @@ public class OAuthRequest extends HttpRequest {
 
 	public void setVerifier(String verifier) {
 		this.verifier = verifier;
+	}
+	
+	public static OAuthRequest newGetRequest(String url) {
+		return new OAuthRequest(HttpMethod.GET, url);
+	}
+	
+	public static OAuthRequest newPostRequest(String url){
+		return new OAuthRequest(HttpMethod.POST, url);
 	}
 	
 //	public String toEncodedQueryString(List<NameValuePair> params) {
