@@ -4,17 +4,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import belmen.weiboframework.http.HttpMethod;
-import belmen.weiboframework.weibo.WeiboRequest;
+import belmen.weiboframework.weibo.ApiRequest;
 
-public class OAuthRequest extends WeiboRequest {
+public class OAuthRequest extends ApiRequest {
 
-//	private final HttpMethod method;
-//	private String url;
-//	private Map<String, String> headers = new LinkedHashMap<String, String>();
-//	private Map<String, String> queryParams = new LinkedHashMap<String, String>();
-//	private Map<String, String> postParams = new LinkedHashMap<String, String>();
-//	private String fileName = null;
-//	private File file = null;
 	private Map<String, String> oauthParams = new LinkedHashMap<String, String>();
 	private String username = null;
 	private String password = null;
@@ -25,80 +18,13 @@ public class OAuthRequest extends WeiboRequest {
 		super(method, url);
 	}
 	
-//	public HttpMethod getMethod() {
-//		return method;
-//	}
-//	
-//	public String getMethodName() {
-//		return method.name();
-//	}
-//
-//	public String getUrl() {
-//		return url;
-//	}
-	
-//	public String getCompleteUrl() {
-//		if(mQueryParams.isEmpty())
-//			return mUrl;
-//		
-//		String queryString = toEncodedQueryString(mQueryParams);
-//		String url = mUrl;
-//		url += url.contains("?") ? "&" : "?";
-//		return url + queryString;
-//	}
-	
-//	public void appendUrl(String append) {
-//		this.url += append;
-//	}
-//
-//	public Map<String, String> getHeaders() {
-//		return headers;
-//	}
-//
-//	public Map<String, String> getQueryParams() {
-//		return queryParams;
-//	}
-//
-//	public Map<String, String> getPostParams() {
-//		return postParams;
-//	}
-
 	public Map<String, String> getOauthParams() {
 		return oauthParams;
 	}
 
-//	public void addHeader(String name, String value) {
-//		headers.put(name, value);
-//	}
-//	
-//	public void addQueryParameter(String name, String value) {
-//		queryParams.put(name, value);
-//	}
-//	
-//	public void addPostParameter(String name, String value) {
-//		postParams.put(name, value);
-//	}
-	
 	public void addOAuthParameter(String name, String value) {
 		oauthParams.put(name, value);
 	}
-	
-//	public String getFileName() {
-//		return fileName;
-//	}
-//	
-//	public File getFile() {
-//		return file;
-//	}
-//	
-//	public void setFile(String fileName, File file) {
-//		this.fileName = fileName;
-//		this.file = file;
-//	}
-//	
-//	public boolean hasFile() {
-//		return fileName != null && file != null;
-//	}
 	
 	public void setCredentials(String username, String password) {
 		this.username = username;
@@ -136,13 +62,4 @@ public class OAuthRequest extends WeiboRequest {
 	public static OAuthRequest newPostRequest(String url){
 		return new OAuthRequest(HttpMethod.POST, url);
 	}
-	
-//	public String toEncodedQueryString(List<NameValuePair> params) {
-//		StringBuilder builder = new StringBuilder();
-//		for(NameValuePair param : params) {
-//			builder.append('&')
-//			.append(Codec.urlEncode(param.getName()) + "=" + Codec.urlEncode(param.getValue()));
-//		}
-//		return builder.toString().substring(1);
-//	}
 }

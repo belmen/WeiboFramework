@@ -9,12 +9,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import belmen.weiboframework.exception.WeiboException;
+import belmen.weiboframework.exception.ApiException;
 import belmen.weiboframework.util.Codec;
-import belmen.weiboframework.weibo.WeiboClient;
-import belmen.weiboframework.weibo.WeiboRequest;
+import belmen.weiboframework.weibo.ApiClient;
+import belmen.weiboframework.weibo.ApiRequest;
 
-public abstract class OAuthClient extends WeiboClient {
+public abstract class OAuthClient extends ApiClient {
 
 	public static final String TAG = OAuthClient.class.getSimpleName();
 	public static final int SIGN_IN_HEADER = 0;
@@ -28,14 +28,15 @@ public abstract class OAuthClient extends WeiboClient {
 	private int mSignStrategy = SIGN_IN_HEADER;
 	
 	public OAuthClient(String consumerKey, String consumerSecret) {
-		this(consumerKey, consumerSecret, DEFAULT_CALLBACK_URL);
-	}
-
-	public OAuthClient(String consumerKey, String consumerSecret,
-			String callbackUrl) {
 		this.mConsumerKey = consumerKey;
 		this.mConsumerSecret = consumerSecret;
 	}
+
+//	public OAuthClient(String consumerKey, String consumerSecret,
+//			String callbackUrl) {
+//		this.mConsumerKey = consumerKey;
+//		this.mConsumerSecret = consumerSecret;
+//	}
 	
 	public void setSignStrategy(int signStrategy) {
 		if(signStrategy == SIGN_IN_HEADER || signStrategy == SIGN_IN_QUERY_STRING) {
@@ -56,11 +57,11 @@ public abstract class OAuthClient extends WeiboClient {
 		this.mTokenSecret = tokenSecret;
 	}
 	
-	public abstract void retrieveRequestToken() throws WeiboException;
+	public abstract void retrieveRequestToken() throws ApiException;
 	
-	public abstract void retrieveAccessToken(String verifier) throws WeiboException;
+	public abstract void retrieveAccessToken(String verifier) throws ApiException;
 	
-	public abstract void retrieveAccessToken(String username, String password) throws WeiboException;
+	public abstract void retrieveAccessToken(String username, String password) throws ApiException;
 
 	/**
 	 * 为请求签名
@@ -68,7 +69,7 @@ public abstract class OAuthClient extends WeiboClient {
 	 * @return
 	 */
 	@Override
-	protected OAuthRequest signRequest(WeiboRequest request) {
+	protected OAuthRequest signRequest(ApiRequest request) {
 		if(request == null) {
 			return null;
 		}

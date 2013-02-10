@@ -2,7 +2,7 @@ package belmen.weiboframework.weibo;
 
 import android.util.Base64;
 
-public class BasicAuthClient extends WeiboClient {
+public class BasicAuthClient extends ApiClient {
 	
 	private String username = null;
 	private String password = null;
@@ -31,7 +31,7 @@ public class BasicAuthClient extends WeiboClient {
 	}
 
 	@Override
-	protected WeiboRequest signRequest(WeiboRequest request) {
+	protected ApiRequest signRequest(ApiRequest request) {
 		String b64 = Base64.encodeToString(String.format("%s:%s", username, password).getBytes(), Base64.NO_WRAP);
 		request.addHeader("Authorization", "Basic " + b64);
 		return request;

@@ -15,7 +15,6 @@ import java.util.Map.Entry;
 import javax.net.ssl.HttpsURLConnection;
 
 import belmen.weiboframework.exception.HttpException;
-import belmen.weiboframework.util.Logger;
 
 public class HttpKit {
 	
@@ -142,12 +141,8 @@ public class HttpKit {
 		    }
 		    return sb.toString();
 		} finally {
-			try {
-				if(is != null) {
-					is.close();
-				}
-			} catch (IOException e) {
-				Logger.e(TAG, e.getMessage(), e);
+			if(is != null) {
+				is.close();
 			}
 		}
 	}

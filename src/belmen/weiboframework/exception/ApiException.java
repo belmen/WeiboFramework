@@ -1,25 +1,25 @@
 package belmen.weiboframework.exception;
 
-public class WeiboException extends HttpException {
+public class ApiException extends HttpException {
 
 	private static final long serialVersionUID = 1L;
 
-	public WeiboException() {
+	public ApiException() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public WeiboException(String detailMessage, Throwable throwable) {
+	public ApiException(String detailMessage, Throwable throwable) {
 		super(detailMessage, throwable);
 		// TODO Auto-generated constructor stub
 	}
 
-	public WeiboException(String detailMessage) {
+	public ApiException(String detailMessage) {
 		super(detailMessage);
 		// TODO Auto-generated constructor stub
 	}
 
-	public WeiboException(Throwable throwable) {
+	public ApiException(Throwable throwable) {
 		super(throwable);
 		// TODO Auto-generated constructor stub
 	}

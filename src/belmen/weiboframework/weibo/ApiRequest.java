@@ -9,9 +9,9 @@ import java.util.Map.Entry;
 import belmen.weiboframework.http.HttpMethod;
 import belmen.weiboframework.util.Codec;
 
-public class WeiboRequest {
+public class ApiRequest {
 
-	public static final String TAG = WeiboRequest.class.getSimpleName();
+	public static final String TAG = ApiRequest.class.getSimpleName();
 	
 	private HttpMethod method;
 	private String url;
@@ -20,7 +20,7 @@ public class WeiboRequest {
 	private Map<String, String> postParams = new LinkedHashMap<String, String>();
 	private Map<String, File> files = new LinkedHashMap<String, File>();
 	
-	public WeiboRequest(HttpMethod method, String url) {
+	public ApiRequest(HttpMethod method, String url) {
 		this.method = method;
 		this.url = url;
 	}
@@ -88,11 +88,11 @@ public class WeiboRequest {
 		return sb.toString();
 	}
 	
-	public static WeiboRequest newGetRequest(String url) {
-		return new WeiboRequest(HttpMethod.GET, url);
+	public static ApiRequest newGetRequest(String url) {
+		return new ApiRequest(HttpMethod.GET, url);
 	}
 	
-	public static WeiboRequest newPostRequest(String url){
-		return new WeiboRequest(HttpMethod.POST, url);
+	public static ApiRequest newPostRequest(String url){
+		return new ApiRequest(HttpMethod.POST, url);
 	}
 }
