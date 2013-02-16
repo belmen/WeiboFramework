@@ -1,9 +1,12 @@
 package belmen.weiboframework.http;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
@@ -15,6 +18,7 @@ import java.util.Map.Entry;
 import javax.net.ssl.HttpsURLConnection;
 
 import belmen.weiboframework.exception.HttpException;
+import belmen.weiboframework.util.Codec;
 
 public class HttpKit {
 	
@@ -52,7 +56,6 @@ public class HttpKit {
 			HttpResponse response = null;
 			connection = createConnection(url, headers);
 			if(connection != null) {
-				connection.connect();
 				int statusCode = connection.getResponseCode();
 				Map<String, List<String>> headerFields = connection.getHeaderFields();
 				String content = readResponseContent(connection);
@@ -69,6 +72,32 @@ public class HttpKit {
 			}
 		}
 	}
+	
+	public static HttpResponse post(String url, Map<String, String> contentBody,
+			Map<String, String> headers) throws HttpException {
+		HttpURLConnection connection = null;
+		try {
+			HttpResponse response = null;
+			connection = createConnection(url, headers);
+			if(connection != null) {
+				writeContentBody(connection, contentBody);
+				int statusCode = connection.getResponseCode();
+				Map<String, List<String>> headerFields = connection.getHeaderFields();
+				String content = readResponseContent(connection);
+				response = new HttpResponse(statusCode, content, headerFields);
+			}
+			return response;
+		} catch(SocketTimeoutException ste) {
+			throw new HttpException("Timeout when connecting: " + url, ste);
+		} catch (IOException e) {
+			throw new HttpException("Exception when connecting: " + url, e);
+		} finally {
+			if(connection != null) {
+				connection.disconnect();
+			}
+		}
+	}
+	
 	
 	private static HttpURLConnection createConnection(String url, Map<String, String> headers)
 			throws HttpException {
@@ -132,8 +161,9 @@ public class HttpKit {
 	}
 	
 	private static String readStream(InputStream is) throws IOException {
+		BufferedReader reader = null;
 		try {
-		    BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+		    reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
 		    StringBuilder sb = new StringBuilder();
 		    String line;
 		    while((line = reader.readLine()) != null) {
@@ -141,8 +171,38 @@ public class HttpKit {
 		    }
 		    return sb.toString();
 		} finally {
-			if(is != null) {
-				is.close();
+			if(reader != null) {
+				reader.close();
+			}
+		}
+	}
+	
+	private static void writeContentBody(HttpURLConnection connection,
+			Map<String, String> contentBody) throws IOException {
+		if(connection == null || contentBody == null) {
+			return;
+		}
+		StringBuilder sb = new StringBuilder();
+		Iterator<Entry<String, String>> iter = contentBody.entrySet().iterator();
+		Entry<String, String> entry;
+		while(iter.hasNext()) {
+			entry = iter.next();
+			sb.append("&").append(Codec.urlEncode(entry.getKey()))
+			.append("=").append(Codec.urlEncode(entry.getValue()));
+		}
+		String body = sb.toString().substring(1);
+		
+		connection.setUseCaches(false);
+		connection.setDoOutput(true);
+		OutputStream os = connection.getOutputStream();
+		BufferedWriter writer = null;
+		try {
+			writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+			writer.write(body);
+			writer.flush();
+		} finally {
+			if(writer != null) {
+				writer.close();
 			}
 		}
 	}

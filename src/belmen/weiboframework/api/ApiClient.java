@@ -23,6 +23,7 @@ public class ApiClient {
 				response = HttpKit.get(url, request.getHeaders());
 				break;
 			case POST:
+				response = HttpKit.post(url, request.getPostParams(), request.getHeaders());
 				break;
 			}
 		} catch (HttpException e) {

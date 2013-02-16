@@ -3,16 +3,12 @@ package belmen.weiboframework.fanfou;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import belmen.weiboframework.exception.BeanParsingException;
 import belmen.weiboframework.util.Logger;
 
 public class Status implements Serializable {
@@ -69,39 +65,6 @@ public class Status implements Serializable {
 		status.setUser(User.fromJson(json.optJSONObject("user")));
 		status.setPhoto(json.optJSONObject("photo"));
 		return status;
-	}
-	
-	public static Status fromJson(String content) throws BeanParsingException {
-		if(content == null) {
-			return null;
-		}
-		try {
-			return fromJson(new JSONObject(content));
-		} catch (JSONException e) {
-			throw new BeanParsingException("Response cannot be converted to Json Object", e);
-		}
-	}
-	
-	public static List<Status> fromJsonArray(JSONArray array) {
-		if(array == null) {
-			return null;
-		}
-		List<Status> list = new ArrayList<Status>(array.length());
-		for(int i = 0; i < array.length(); i++) {
-			list.add(fromJson(array.optJSONObject(i)));
-		}
-		return list;
-	}
-	
-	public static List<Status> fromJsonArray(String content) throws BeanParsingException {
-		if(content == null) {
-			return null;
-		}
-		try {
-			return fromJsonArray(new JSONArray(content));
-		} catch (JSONException e) {
-			throw new BeanParsingException("Response cannot be converted to Json Array", e);
-		}
 	}
 	
 	public Date getCreatedAt() {

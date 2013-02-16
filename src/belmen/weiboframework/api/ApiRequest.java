@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import belmen.weiboframework.http.HttpMethod;
-import belmen.weiboframework.oauth.OAuthRequest;
 import belmen.weiboframework.util.Codec;
 
 public class ApiRequest {

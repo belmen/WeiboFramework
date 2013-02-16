@@ -3,12 +3,9 @@ package belmen.weiboframework.fanfou;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -108,17 +105,6 @@ public class User implements Serializable {
 		user.setProfileBackgroundImageUrl(json.optString("profile_background_image_url"));
 		user.setProfileBackgroundTile(json.optBoolean("profile_background_tile"));
 		return user;
-	}
-	
-	public static List<User> fromJsonArray(JSONArray array) {
-		if(array == null) {
-			return null;
-		}
-		List<User> list = new ArrayList<User>(array.length());
-		for(int i = 0; i < array.length(); i++) {
-			list.add(fromJson(array.optJSONObject(i)));
-		}
-		return list;
 	}
 
 	public String getRawData() {
