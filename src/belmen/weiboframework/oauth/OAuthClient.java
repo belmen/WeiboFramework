@@ -154,7 +154,7 @@ public abstract class OAuthClient extends ApiClient {
 		Map<String, String> allParams = new LinkedHashMap<String, String>();
 		allParams.putAll(request.getOauthParams());
 		allParams.putAll(request.getQueryParams());
-		if(request.hasFile()) {
+		if(!request.hasFile()) {
 			allParams.putAll(request.getPostParams());
 		}
 		List<Map.Entry<String, String>> list = new ArrayList<Map.Entry<String, String>>(allParams.entrySet());
