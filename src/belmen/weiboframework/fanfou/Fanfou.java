@@ -16,8 +16,8 @@ import belmen.weiboframework.util.Logger;
 
 public class Fanfou extends OAuthClient {
 
-	private static final String COMSUMER_KEY = "6f45ffcaea4ea8b0d1aedad2d2e6518f";
-	private static final String COMSUMER_SECRET = "0ae1b550f6f6a0b6a3522d4317425d47";
+	private static final String COMSUMER_KEY = "";
+	private static final String COMSUMER_SECRET = "";
 	private static final String TOKEN_REGEX = "oauth_token=([^&]+)&oauth_token_secret=([^&]+)"; 
 	
 	public Fanfou() {
