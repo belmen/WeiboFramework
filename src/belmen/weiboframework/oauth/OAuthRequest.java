@@ -3,8 +3,8 @@ package belmen.weiboframework.oauth;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import belmen.weiboframework.api.ApiRequest;
 import belmen.weiboframework.http.HttpMethod;
-import belmen.weiboframework.weibo.ApiRequest;
 
 public class OAuthRequest extends ApiRequest {
 
@@ -55,11 +55,27 @@ public class OAuthRequest extends ApiRequest {
 		this.verifier = verifier;
 	}
 	
-	public static OAuthRequest newGetRequest(String url) {
-		return new OAuthRequest(HttpMethod.GET, url);
+	public static OAuthRequest newGetRequest(String url, String... params) {
+		OAuthRequest request = new OAuthRequest(HttpMethod.GET, url);
+		String[] pair;
+		for(String param : params) {
+			pair = param.split("=");
+			if(pair.length >= 2) {
+				request.addQueryParameter(pair[0], pair[1]);
+			}
+		}
+		return request;
 	}
 	
-	public static OAuthRequest newPostRequest(String url){
-		return new OAuthRequest(HttpMethod.POST, url);
+	public static OAuthRequest newPostRequest(String url, String... params){
+		OAuthRequest request = new OAuthRequest(HttpMethod.POST, url);
+		String[] pair;
+		for(String param : params) {
+			pair = param.split("=");
+			if(pair.length >= 2) {
+				request.addPostParameter(pair[0], pair[1]);
+			}
+		}
+		return request;
 	}
 }

@@ -9,10 +9,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import belmen.weiboframework.api.ApiClient;
+import belmen.weiboframework.api.ApiRequest;
 import belmen.weiboframework.exception.ApiException;
 import belmen.weiboframework.util.Codec;
-import belmen.weiboframework.weibo.ApiClient;
-import belmen.weiboframework.weibo.ApiRequest;
 
 public abstract class OAuthClient extends ApiClient {
 
@@ -25,6 +25,7 @@ public abstract class OAuthClient extends ApiClient {
 	private final String mConsumerSecret;
 	private String mToken = null;
 	private String mTokenSecret = null;
+	private String mCallbackUrl = DEFAULT_CALLBACK_URL;
 	private int mSignStrategy = SIGN_IN_HEADER;
 	
 	public OAuthClient(String consumerKey, String consumerSecret) {
@@ -52,12 +53,22 @@ public abstract class OAuthClient extends ApiClient {
 		return mTokenSecret;
 	}
 	
+	public String getCallbackUrl() {
+		return mCallbackUrl;
+	}
+
+	public void setCallbackUrl(String callbackUrl) {
+		this.mCallbackUrl = callbackUrl;
+	}
+
 	public void setToken(String token, String tokenSecret) {
 		this.mToken = token;
 		this.mTokenSecret = tokenSecret;
 	}
 	
 	public abstract void retrieveRequestToken() throws ApiException;
+	
+	public abstract String getAuthorizeUrl();
 	
 	public abstract void retrieveAccessToken(String verifier) throws ApiException;
 	
@@ -73,7 +84,12 @@ public abstract class OAuthClient extends ApiClient {
 		if(request == null) {
 			return null;
 		}
-		OAuthRequest oauthRequest = (OAuthRequest) request;
+		OAuthRequest oauthRequest = null;
+		try {
+			oauthRequest = (OAuthRequest) request;
+		} catch(ClassCastException e) {
+			throw new IllegalArgumentException("The request to send is not an OAuthRequest");
+		}
 		addOAuthParams(oauthRequest);
 		appendOAuthParams(oauthRequest);
 		return oauthRequest;

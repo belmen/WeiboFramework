@@ -1,4 +1,4 @@
-package belmen.weiboframework.weibo;
+package belmen.weiboframework.api;
 
 import belmen.weiboframework.exception.HttpException;
 import belmen.weiboframework.exception.ApiException;

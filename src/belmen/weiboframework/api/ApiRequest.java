@@ -1,4 +1,4 @@
-package belmen.weiboframework.weibo;
+package belmen.weiboframework.api;
 
 import java.io.File;
 import java.util.Iterator;
@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import belmen.weiboframework.http.HttpMethod;
+import belmen.weiboframework.oauth.OAuthRequest;
 import belmen.weiboframework.util.Codec;
 
 public class ApiRequest {
@@ -88,11 +89,27 @@ public class ApiRequest {
 		return sb.toString();
 	}
 	
-	public static ApiRequest newGetRequest(String url) {
-		return new ApiRequest(HttpMethod.GET, url);
+	public static ApiRequest newGetRequest(String url, String... params) {
+		ApiRequest request = new ApiRequest(HttpMethod.GET, url);
+		String[] pair;
+		for(String param : params) {
+			pair = param.split("=");
+			if(pair.length >= 2) {
+				request.addQueryParameter(pair[0], pair[1]);
+			}
+		}
+		return request;
 	}
 	
-	public static ApiRequest newPostRequest(String url){
-		return new ApiRequest(HttpMethod.POST, url);
+	public static ApiRequest newPostRequest(String url, String... params){
+		ApiRequest request = new ApiRequest(HttpMethod.POST, url);
+		String[] pair;
+		for(String param : params) {
+			pair = param.split("=");
+			if(pair.length >= 2) {
+				request.addPostParameter(pair[0], pair[1]);
+			}
+		}
+		return request;
 	}
 }

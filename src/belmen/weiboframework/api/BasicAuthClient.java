@@ -1,4 +1,4 @@
-package belmen.weiboframework.weibo;
+package belmen.weiboframework.api;
 
 import android.util.Base64;
 
