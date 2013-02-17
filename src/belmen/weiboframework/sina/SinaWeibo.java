@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import belmen.weiboframework.api.ApiRequest;
 import belmen.weiboframework.api.OAuth20Client;
 import belmen.weiboframework.exception.ApiException;
+import belmen.weiboframework.exception.BeanParsingException;
 import belmen.weiboframework.http.HttpResponse;
 import belmen.weiboframework.util.Logger;
 
@@ -23,6 +24,12 @@ public class SinaWeibo extends OAuth20Client {
 	public List<Status> getHomeTimeline() throws ApiException {
 		ApiRequest request = ApiRequest.newGetRequest("https://api.weibo.com/2/statuses/home_timeline.json");
 		return BeanFactory.parseStatusList(sendRequest(request).getContent(), "statuses");
+	}
+	
+	public Status updateStatue(String status) throws ApiException {
+		ApiRequest request = ApiRequest.newPostRequest("https://api.weibo.com/2/statuses/update.json");
+		request.addPostParameter("status", status);
+		return BeanFactory.parseStatus(sendRequest(request).getContent());
 	}
 	
 	@Override

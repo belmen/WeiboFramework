@@ -14,6 +14,14 @@ public class BeanFactory {
 
 	public static final String TAG = BeanFactory.class.getSimpleName();
 	
+	public static Status parseStatus(String content) throws BeanParsingException {
+		if(content == null) {
+			return null;
+		}
+		JSONObject json = getJsonObject(content);
+		return Status.fromJson(json);
+	}
+	
 	public static List<Status> parseStatusList(String content, String name) throws BeanParsingException {
 		if(content == null) {
 			return null;
