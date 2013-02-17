@@ -37,9 +37,7 @@ public class ApiClient {
 		return response;
 	}
 	
-	protected ApiRequest signRequest(ApiRequest request) {
-		return request;
-	}
+	protected void signRequest(ApiRequest request) throws ApiException {}
 	
 	/**
 	 * Determine whether an response is an error response or not.

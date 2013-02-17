@@ -1,9 +1,8 @@
-package belmen.weiboframework.oauth;
+package belmen.weiboframework.api;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import belmen.weiboframework.api.ApiRequest;
 import belmen.weiboframework.http.HttpMethod;
 
 public class OAuthRequest extends ApiRequest {

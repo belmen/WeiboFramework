@@ -1,4 +1,4 @@
-package belmen.weiboframework.oauth;
+package belmen.weiboframework.api;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,14 +9,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import belmen.weiboframework.api.ApiClient;
-import belmen.weiboframework.api.ApiRequest;
 import belmen.weiboframework.exception.ApiException;
 import belmen.weiboframework.util.Codec;
 
-public abstract class OAuthClient extends ApiClient {
+public abstract class OAuth10Client extends ApiClient {
 
-	public static final String TAG = OAuthClient.class.getSimpleName();
+	public static final String TAG = OAuth10Client.class.getSimpleName();
 	public static final int SIGN_IN_HEADER = 0;
 	public static final int SIGN_IN_QUERY_STRING = 1;
 	private static final String DEFAULT_CALLBACK_URL = "oob";
@@ -28,16 +26,14 @@ public abstract class OAuthClient extends ApiClient {
 	private String mCallbackUrl = DEFAULT_CALLBACK_URL;
 	private int mSignStrategy = SIGN_IN_HEADER;
 	
-	public OAuthClient(String consumerKey, String consumerSecret) {
+	public OAuth10Client(String consumerKey, String consumerSecret) {
 		this.mConsumerKey = consumerKey;
 		this.mConsumerSecret = consumerSecret;
 	}
-
-//	public OAuthClient(String consumerKey, String consumerSecret,
-//			String callbackUrl) {
-//		this.mConsumerKey = consumerKey;
-//		this.mConsumerSecret = consumerSecret;
-//	}
+	
+	public int getSignStrategy() {
+		return mSignStrategy;
+	}
 	
 	public void setSignStrategy(int signStrategy) {
 		if(signStrategy == SIGN_IN_HEADER || signStrategy == SIGN_IN_QUERY_STRING) {
@@ -80,9 +76,9 @@ public abstract class OAuthClient extends ApiClient {
 	 * @return
 	 */
 	@Override
-	protected OAuthRequest signRequest(ApiRequest request) {
+	protected void signRequest(ApiRequest request) {
 		if(request == null) {
-			return null;
+			return;
 		}
 		OAuthRequest oauthRequest = null;
 		try {
@@ -92,7 +88,6 @@ public abstract class OAuthClient extends ApiClient {
 		}
 		addOAuthParams(oauthRequest);
 		appendOAuthParams(oauthRequest);
-		return oauthRequest;
 	}
 
 	/**
@@ -148,7 +143,7 @@ public abstract class OAuthClient extends ApiClient {
 		return generateSignature(baseString);
 	}
 	
-	private static String getBaseString(OAuthRequest request) {
+	protected String getBaseString(OAuthRequest request) {
 		String method = request.getMethod().name();
 		String url = Codec.urlEncode(request.getUrl());
 		Map<String, String> allParams = new LinkedHashMap<String, String>();

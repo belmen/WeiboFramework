@@ -8,13 +8,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import belmen.weiboframework.api.ApiRequest;
+import belmen.weiboframework.api.OAuth10Client;
+import belmen.weiboframework.api.OAuthRequest;
 import belmen.weiboframework.exception.ApiException;
 import belmen.weiboframework.http.HttpResponse;
-import belmen.weiboframework.oauth.OAuthClient;
-import belmen.weiboframework.oauth.OAuthRequest;
 import belmen.weiboframework.util.Logger;
 
-public class Fanfou extends OAuthClient {
+public class Fanfou extends OAuth10Client {
 
 	private static final String COMSUMER_KEY = "";
 	private static final String COMSUMER_SECRET = "";

@@ -31,9 +31,8 @@ public class BasicAuthClient extends ApiClient {
 	}
 
 	@Override
-	protected ApiRequest signRequest(ApiRequest request) {
+	protected void signRequest(ApiRequest request) {
 		String b64 = Base64.encodeToString(String.format("%s:%s", username, password).getBytes(), Base64.NO_WRAP);
 		request.addHeader("Authorization", "Basic " + b64);
-		return request;
 	}
 }
