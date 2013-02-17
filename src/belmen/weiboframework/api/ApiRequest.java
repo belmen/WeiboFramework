@@ -41,24 +41,27 @@ public class ApiRequest {
 		return headers;
 	}
 
-	public void addHeader(String name, String value) {
+	public ApiRequest addHeader(String name, String value) {
 		headers.put(name, value);
+		return this;
 	}
 	
 	public Map<String, String> getQueryParams() {
 		return queryParams;
 	}
 	
-	public void addQueryParameter(String name, String value) {
+	public ApiRequest addQueryParameter(String name, String value) {
 		queryParams.put(name, value);
+		return this;
 	}
 
 	public Map<String, String> getPostParams() {
 		return postParams;
 	}
 	
-	public void addPostParameter(String name, String value) {
+	public ApiRequest addPostParameter(String name, String value) {
 		postParams.put(name, value);
+		return this;
 	}
 
 	public Map<String, File> getFiles() {

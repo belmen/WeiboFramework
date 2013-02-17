@@ -20,6 +20,12 @@ public abstract class OAuth20Client extends ApiClient {
 	private String mRefreshToken = null;
 	private Date mExpireDate = null;
 	
+	public static interface TokenExpiredListener {
+		void onReauthorize(String url, String redirectUri);
+		void onTokenRefreshed(String token, Date expireDate, String refreshToken);
+	}
+	private TokenExpiredListener mTokenExpiredListener = null;
+	
 	public OAuth20Client(String clientId, String clientSecret) {
 		this.mClientId = clientId;
 		this.mClientSecret = clientSecret;
@@ -45,14 +51,18 @@ public abstract class OAuth20Client extends ApiClient {
 		return mRefreshToken;
 	}
 	
-	public void setToken(String token, int expiresIn) {
-		setToken(token, expiresIn, null);
+	public String getToken() {
+		return mToken;
+	}
+
+	public void setToken(String token, Date expireDate) {
+		setToken(token, expireDate, null);
 	}
 	
-	public void setToken(String token, int expiresIn, String refreshToken) {
+	public void setToken(String token, Date expireDate, String refreshToken) {
 		this.mToken = token;
 		this.mRefreshToken = refreshToken;
-		this.mExpireDate = new Date(System.currentTimeMillis() + (long) expiresIn * 1000);
+		this.mExpireDate = expireDate; 
 	}
 
 	public Date getExpireDate() {
@@ -69,23 +79,35 @@ public abstract class OAuth20Client extends ApiClient {
 		}
 	}
 
+	public void setTokenExpiredListener(TokenExpiredListener l) {
+		this.mTokenExpiredListener = l;
+	}
+
 	public abstract String getAuthorizeUrl();
 	
 	public abstract void retrieveAccessToken(String code) throws ApiException;
 	
-	public boolean refreshToken() throws ApiException {
+	public boolean refreshToken() {
 		return false;
 	}
 	
 	@Override
-	protected void signRequest(ApiRequest request) throws ApiException {
+	protected void signRequest(ApiRequest request) {
 		if(mToken == null) {
 			return;
 		}
-		if(refreshToken()) {
-			
-		} else {
-			
+		
+		if(tokenExpired()) {
+			if(refreshToken()) {
+				if(mTokenExpiredListener != null) {
+					mTokenExpiredListener.onTokenRefreshed(mToken, mExpireDate, mRefreshToken);
+				}
+			} else {
+				if(mTokenExpiredListener != null) {
+					mTokenExpiredListener.onReauthorize(getAuthorizeUrl(), getRedirectUri());
+					return;
+				}
+			}
 		}
 		switch (mSignStrategy) {
 		case SIGN_IN_HEADER:
@@ -95,5 +117,9 @@ public abstract class OAuth20Client extends ApiClient {
 			request.addQueryParameter("access_token", mToken);
 			break;
 		}
+	}
+	
+	protected boolean tokenExpired() {
+		return mExpireDate != null && new Date().after(mExpireDate);
 	}
 }

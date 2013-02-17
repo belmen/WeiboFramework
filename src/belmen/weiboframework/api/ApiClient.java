@@ -23,7 +23,7 @@ public class ApiClient {
 				response = HttpKit.get(url, request.getHeaders());
 				break;
 			case POST:
-				response = HttpKit.post(url, request.getPostParams(), request.getHeaders());
+				response = HttpKit.post(url, request.getHeaders(), request.getPostParams());
 				break;
 			}
 		} catch (HttpException e) {
@@ -37,7 +37,7 @@ public class ApiClient {
 		return response;
 	}
 	
-	protected void signRequest(ApiRequest request) throws ApiException {}
+	protected void signRequest(ApiRequest request) {}
 	
 	/**
 	 * Determine whether an response is an error response or not.
