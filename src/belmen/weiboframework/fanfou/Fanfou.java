@@ -16,15 +16,13 @@ import belmen.weiboframework.util.Logger;
 
 public class Fanfou extends OAuth10Client {
 
-	private static final String COMSUMER_KEY = "";
-	private static final String COMSUMER_SECRET = "";
 	private static final String TOKEN_REGEX = "oauth_token=([^&]+)&oauth_token_secret=([^&]+)"; 
 	
-	public Fanfou() {
-		super(COMSUMER_KEY, COMSUMER_SECRET);
+	public Fanfou(String consumerKey, String consumerSecret) {
+		super(consumerKey, consumerSecret);
 		setCallbackUrl("belmen.anwei.oauth");
 	}
-	
+
 	public List<Status> getHomeTimeline() throws ApiException {
 		OAuthRequest request = OAuthRequest.newGetRequest("http://api.fanfou.com/statuses/home_timeline.json");
 		HttpResponse response = sendRequest(request);
