@@ -119,7 +119,7 @@ public abstract class OAuth20Client extends ApiClient {
 		}
 	}
 	
-	protected boolean tokenExpired() {
+	public boolean tokenExpired() {
 		return mExpireDate != null && new Date().after(mExpireDate);
 	}
 }

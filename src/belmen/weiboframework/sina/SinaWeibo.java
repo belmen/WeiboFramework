@@ -61,6 +61,20 @@ public class SinaWeibo extends OAuth20Client {
 		}
 	}
 
+//	@Override
+//	protected boolean handleErrorResponse(ApiRequest request,
+//			HttpResponse response) {
+//		try {
+//			JSONObject json = new JSONObject(response.getContent());
+//			int code = Integer.parseInt(json.optString("error_code"));
+//			
+//			return true;
+//		} catch (JSONException e) {
+//			Logger.e(TAG, e.getMessage(), e);
+//		}
+//		return false;
+//	}
+
 	@Override
 	protected ApiException parseErrorResponse(ApiRequest request,
 			HttpResponse response) {
